@@ -1,33 +1,30 @@
 require_relative '../config/environment.rb'
 
+
+cli = CLI.new
+cli.clear_screen
 scraper = Scraper.new
-movies_array = scraper.get_movies
+
+cli.print_message "List of all movies currenty showing in Australia:"
+
+Movie.all.each.with_index(1) {|movie, index| cli.print_message ("#{index}: #{movie.title}")}
+
+input = (cli.get_input_with_message "Enter the movie number to get more info").to_i
+
+if input == !nil || input < 1 || input > Movie.all.count
+    cli.print_message "You have entered invalid movie number"
+    return
+end
 
 
-puts "\n\n\nAttempting to get movie list\n\n\n"
-Movie.print_all_movies
-
-movie = Movie.all[0]
-puts "\n\n\nMovie data without props:"
-p movie
-
+movie = Movie.all[input-1]
+puts "Getting data for the movie #{movie.title}"
 scraper.get_movie_details(movie)
-puts "\n\n\nMovie data with props:"
-p movie
+movie
 
-movie = Movie.all[21]
-puts "\n\n\nMovie data without props:"
-p movie
-
-scraper.get_movie_details(movie)
-puts "\n\n\nMovie data with props:"
 p movie
 
 
+def print_movie_details(movie)
 
-
-
-
-
-
-
+end

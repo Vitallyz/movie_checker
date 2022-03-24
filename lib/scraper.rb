@@ -5,6 +5,10 @@ class Scraper
 
     @@doc = nil #store the movie data so that you dont need to get it more than once
 
+    def initialize
+        self.get_movies
+    end
+
     def get_page
         if !@@doc
             browser = Watir::Browser.new :chrome, headless: true
@@ -26,8 +30,6 @@ class Scraper
     end
 
     def get_movie_props(movie)
-        puts "Getting data for movie #{movie.title}"
-
         browser = Watir::Browser.new :chrome, headless: true
         browser.goto(movie.url)
         props_doc = Nokogiri::HTML(browser.html)
@@ -46,10 +48,6 @@ class Scraper
         props[:rating] = props_doc.css("div.info")[0].css("span.rating").text
         props[:policy] = props_doc.css("div.info")[0].css("div.policy").text.strip
         props[:description] = props_doc.css("div.info")[0].css("div.description").text.strip
-        
-        p props[:fb_shares] = props_doc.css("div.info span._5n6h")[1]
-
-        binding.pry
 
         parse_movie_properties(props_doc.css("div.info")[0].css("div.prop"), props)
         

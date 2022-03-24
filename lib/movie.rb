@@ -14,7 +14,6 @@ class Movie
         @director = director
         @cast = cast
         @description = description
-        @fb_shares = fb_shares
 
         self.class.all << self
     end
