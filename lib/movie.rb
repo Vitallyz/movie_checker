@@ -2,17 +2,19 @@
 class Movie
     @@all =[]
 
-    attr_accessor :title, :url, :rating, :policy, :release_date, :running_time, :director, :cast, :description, :fb_shares  
+    attr_accessor :title, :url, :rating, :policy, :release_date, :running_time, :director, :cast, :description
 
-    def initialize (title, url, rating = "", policy = "", release_date = "", running_time = "", director = "", cast = "", description = "", fb_shares = nil )
-        self.title = title
-        self.url = url
-        self.release_date = release_date
-        self.running_time = running_time
-        self. director = director
-        self. cast = cast
-        self.description = description
-        self.fb_shares = fb_shares
+    def initialize (title:, url:, rating: "", policy: "", release_date: "", running_time: "", director: "", cast: "", description: "")
+        @title = title
+        @url = url
+        @rating = rating
+        @policy = policy
+        @release_date = release_date
+        @running_time = running_time
+        @director = director
+        @cast = cast
+        @description = description
+        @fb_shares = fb_shares
 
         self.class.all << self
     end
@@ -22,7 +24,7 @@ class Movie
     end
 
     def is_scraped?
-        if description == ""
+        if @description == ""
             return false
         else
             return true
@@ -30,7 +32,7 @@ class Movie
     end
 
     def self.create_movie(title, url)
-        self.new(title, url)
+        self.new(title: title, url: url)
     end
 
     def self.create_movies_from_array(array)
@@ -39,6 +41,20 @@ class Movie
 
     def self.print_all_movies
         @@all.each.with_index(1) {|movie, index| puts "#{index}: #{movie.title}, #{movie.url}"}
+    end
+
+    def self.create_or_update_with_props(props_hash)
+        movie = self.all.find {|movie| movie.title == props_hash[:title]}
+
+        if movie
+            movie.update_movie_with_props(props_hash)
+        else
+            self.new(props_hash)
+        end
+    end
+
+    def update_movie_with_props(props)
+        props.each {|key, value| self.send(("#{key}="), value)}
     end
 
 end

@@ -15,49 +15,60 @@ class Scraper
         doc = @@doc
     end
 
-    def get_movie_list_with_url
+    def get_movies
         movie_list = []
         get_page.css("div.movie-thumb-wrapper").each_with_index do |element, index| 
             movie_list << [element.css("div.title").text, @@BASE_URL + element.css("a")[0]["href"]]
             # puts "#{index}: #{movie_list.last[0]}, URL: #{movie_list.last[1]}"
         end
 
-        movie_list
+        Movie.create_movies_from_array(movie_list)
     end
 
-    def get_movie_data(movie)
+    def get_movie_props(movie)
         puts "Getting data for movie #{movie.title}"
 
         browser = Watir::Browser.new :chrome, headless: true
         browser.goto(movie.url)
-        doc = Nokogiri::HTML(browser.html)
+        props_doc = Nokogiri::HTML(browser.html)
     end
 
-    def set_movie_data(movie)
+    def get_movie_details(movie)
         if movie.description != ""
             return #the movie data is already retreaved.
         end
-        doc = get_movie_data(movie)
-        movie.rating = doc.css("div.info")[0].css("span.rating").text
-        movie.policy = doc.css("div.info")[0].css("div.policy").text.strip
-        movie.description = doc.css("div.info")[0].css("div.description").text.strip
+        props_doc = get_movie_props(movie)
+        props = {}
+        props[:title] = movie.title
+        props[:url] = movie.url 
 
-        set_movie_properties(doc.css("div.info")[0].css("div.prop"), movie)
+
+        props[:rating] = props_doc.css("div.info")[0].css("span.rating").text
+        props[:policy] = props_doc.css("div.info")[0].css("div.policy").text.strip
+        props[:description] = props_doc.css("div.info")[0].css("div.description").text.strip
+        
+        p props[:fb_shares] = props_doc.css("div.info span._5n6h")[1]
+
+        binding.pry
+
+        parse_movie_properties(props_doc.css("div.info")[0].css("div.prop"), props)
+        
+        Movie.create_or_update_with_props(props)
     end
 
-    def set_movie_properties( props, movie)
-        props.each do |prop|
+    def parse_movie_properties( props_doc, props)
+        props_doc.each do |prop|
             prop_name = prop.css("span").text
 
             case (prop_name)
             when "Release Date:"
-                movie.release_date = prop.css("p").text
+                props[:release_date] = prop.css("p").text
             when "Running Time:"
-                movie.running_time = prop.css("p").text
+                props[:running_time] = prop.css("p").text
             when "Director"
-                movie.director = prop.css("p").text
+                props[:director] = prop.css("p").text
             when "Cast:"
-                movie.cast = prop.css("p").text
+                props[:cast] = prop.css("p").text
             end
         end
     end
