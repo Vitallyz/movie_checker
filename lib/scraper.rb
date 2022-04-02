@@ -11,9 +11,14 @@ class Scraper
 
     def get_page
         if !@@doc
-            browser = Watir::Browser.new :chrome, headless: true
+            
+            browser = Watir::Browser.new :chrome, headless: true # those three lines of code using watir gem to scrap
             browser.goto(@@URL)
             @@doc  = Nokogiri::HTML(browser.html)
+
+            # @@doc  = Nokogiri::HTML(URI::open(@@URL))
+            # binding.pry
+
         end
 
         doc = @@doc
@@ -54,7 +59,7 @@ class Scraper
         Movie.create_or_update_with_props(props)
     end
 
-    def parse_movie_properties( props_doc, props)
+    def parse_movie_properties(props_doc, props)
         props_doc.each do |prop|
             prop_name = prop.css("span").text
 
