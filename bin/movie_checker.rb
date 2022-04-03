@@ -22,7 +22,7 @@ class MovieChecker
       scraper.get_movie_details(movie)
       print_movie_details(movie)
 
-      input = cli.get_input_with_message 'Type "e" to quit or anything else to start over: '
+      input = cli.get_input_with_message 'Type "q" to quit or anything else to start over'
       check_for_program_exit_request(input)
     end
   end
@@ -31,7 +31,7 @@ class MovieChecker
     input =""
     
     loop do
-      input = (cli.get_input_with_message 'Enter the movie number to get more info. Type "e" to quit the program: ')
+      input = (cli.get_input_with_message 'Enter the movie number to get more info. Type "e" to quit the program')
       break if movie_exist?(input)
     end
     input.to_i
