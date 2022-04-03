@@ -45,14 +45,14 @@ class MovieChecker
   end
 
   def print_movie_details (movie)
-    cli.print_message "Title: #{movie.title}" if movie.title
-    cli.print_message "Rating: #{movie.rating}" if movie.rating
-    cli.print_message "Policy: #{movie.policy}" if movie.policy
-    cli.print_message "Release Date: #{movie.release_date}" if movie.release_date
-    cli.print_message "Running Time: #{movie.running_time}" if movie.running_time
-    cli.print_message "Director: #{movie.director}" if movie.director
-    cli.print_message "Cast: #{movie.cast}" if movie.cast
-    cli.print_message "Description: #{movie.description}" if movie.description
+    cli.print_message "Title: #{movie.title}" if movie.title != ""
+    cli.print_message "Rating: #{movie.rating}" if movie.rating != ""
+    cli.print_message "Policy: #{movie.policy}" if movie.policy != ""
+    cli.print_message "Release Date: #{movie.release_date}" if movie.release_date != ""
+    cli.print_message "Running Time: #{movie.running_time}" if movie.running_time != ""
+    cli.print_message "Director: #{movie.director}" if movie.director != ""
+    cli.print_message "Cast: #{movie.cast}" if movie.cast != ""
+    cli.print_message "Description: #{movie.description}" if movie.description != ""
     end
 
   def movie_exist?(input)
