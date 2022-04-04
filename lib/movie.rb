@@ -1,4 +1,3 @@
-
 class Movie
     @@all =[]
 
@@ -30,16 +29,8 @@ class Movie
         end
     end
 
-    def self.create_movie(title, url)
-        self.new(title: title, url: url)
-    end
-
     def self.create_movies_from_array(array)
-        array.each {|movie| create_movie(movie[0], movie[1])}
-    end
-
-    def self.print_all_movies
-        @@all.each.with_index(1) {|movie, index| puts "#{index}: #{movie.title}, #{movie.url}"}
+        array.each {|movie_init_data| create_or_update_with_props(movie_init_data)}
     end
 
     def self.create_or_update_with_props(props_hash)
@@ -56,4 +47,7 @@ class Movie
         props.each {|key, value| self.send(("#{key}="), value)}
     end
 
+    def self.print_all_movies
+        @@all.each.with_index(1) {|movie, index| puts "#{index}: #{movie.title}, #{movie.url}"}
+    end
 end

@@ -1,4 +1,3 @@
-
 class Scraper 
     @@URL ="https://www.eventcinemas.com.au/Movies/NowShowing#sortby=popularity"
     @@BASE_URL = "https://www.eventcinemas.com.au/"
@@ -27,8 +26,7 @@ class Scraper
     def get_movies
         movie_list = []
         get_page.css("div.movie-thumb-wrapper").each_with_index do |element, index| 
-            movie_list << [element.css("div.title").text, @@BASE_URL + element.css("a")[0]["href"]]
-            # puts "#{index}: #{movie_list.last[0]}, URL: #{movie_list.last[1]}"
+            movie_list << {title: element.css("div.title").text, url: @@BASE_URL + element.css("a")[0]["href"]}
         end
 
         Movie.create_movies_from_array(movie_list)
